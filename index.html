@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trilogy Run Asia — National Finals</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:#FF4D00; --orange-dim:#FF4D0022; --white:#F2EDE6; --off:#141414;
+    --muted:#6B5E52; --line:#2E2520; --easy:#3A7D44; --tempo:#C97D1A;
+    --hard:#C0392B; --rest:#2A2520; --blue:#4A7FC1; --purple:#7C4DFF;
+    --gold:#E8A020; --gold-dim:#E8A02022;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--off);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;padding:0 0 80px;}
+
+  /* HERO */
+  .hero{padding:48px 24px 36px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;}
+  .hero::before{content:'NOV 22';font-family:'Bebas Neue',sans-serif;font-size:180px;color:#ffffff06;position:absolute;right:-10px;top:-20px;line-height:1;pointer-events:none;}
+  .hero-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,8vw,64px);line-height:.95;margin-bottom:16px;}
+  .hero h1 span{color:var(--gold);}
+  .hero-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
+  .meta-pill{background:var(--line);border:1px solid #3A2E28;padding:6px 14px;border-radius:2px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;}
+  .meta-pill strong{color:var(--gold);font-weight:500;}
+
+  /* PACE GUIDE */
+  .pace-guide{padding:28px 24px;border-bottom:1px solid var(--line);}
+  .section-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+  .pace-table{width:100%;border-collapse:collapse;margin-top:12px;}
+  .pace-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);}
+  .pace-table td{font-family:'DM Mono',monospace;font-size:12px;color:var(--white);padding:10px 12px;border-bottom:1px solid #1E1A16;}
+  .pace-table tr:hover td{background:var(--line);}
+  .cdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+
+  /* LEGEND */
+  .legend{display:flex;flex-wrap:wrap;gap:12px;padding:16px 24px;border-bottom:1px solid var(--line);}
+  .legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;}
+  .ldot{width:10px;height:10px;border-radius:1px;}
+
+  /* STRATEGY */
+  .strategy{padding:28px 24px;border-bottom:1px solid var(--line);}
+  .strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+  .strat-card{border:1px solid var(--line);padding:16px;position:relative;}
+  .strat-card .num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--gold-dim);line-height:1;position:absolute;right:12px;top:8px;}
+  .strat-card h3{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);margin-bottom:8px;letter-spacing:1px;}
+  .strat-card p{font-size:13px;color:#A89880;line-height:1.6;}
+
+  /* PHASE HEADER */
+  .phase-header{padding:20px 24px 12px;display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--off);z-index:10;}
+  .phase-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;}
+  .phase-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+  .phase-weeks{margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+
+  /* WEEK CARD */
+  .week-card{border-bottom:1px solid var(--line);padding:20px 24px;transition:background .2s;}
+  .week-card:hover{background:#1E1814;}
+  .week-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .week-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1;min-width:60px;}
+  .week-info{flex:1;}
+  .week-focus{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--white);text-transform:uppercase;}
+  .week-dates{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
+  .week-km{text-align:right;}
+  .week-km .km-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+  .week-km .km-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+  .week-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid;}
+  .badge-cutback{color:#7070d0;border-color:#3a3a80;background:#1a1a40;}
+  .badge-peak{color:var(--gold);border-color:var(--gold-dim);background:#2a1a00;}
+
+  /* DAYS GRID */
+  .days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  @media(max-width:600px){.days-grid{grid-template-columns:repeat(4,1fr);}}
+  .day-block{padding:8px 6px;border-radius:2px;min-height:90px;display:flex;flex-direction:column;gap:3px;}
+  .day-block.easy  {background:#1C2E1E;border-top:2px solid var(--easy);}
+  .day-block.tempo {background:#2E2210;border-top:2px solid var(--tempo);}
+  .day-block.hard  {background:#2E1610;border-top:2px solid var(--hard);}
+  .day-block.long  {background:#1A1E30;border-top:2px solid var(--blue);}
+  .day-block.rest  {background:var(--rest);border-top:2px solid #3A2E28;}
+  .day-block.sc    {background:#221A2E;border-top:2px solid var(--purple);}
+  .day-block.race  {background:#2E1A10;border-top:2px solid var(--orange);}
+  .day-block.mp    {background:#2A1E00;border-top:2px solid var(--gold);}
+  .day-name{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+  .day-date{font-family:'DM Mono',monospace;font-size:8px;color:#4A3E36;margin-top:1px;}
+  .day-type{font-family:'DM Mono',monospace;font-size:9px;color:var(--white);font-weight:500;line-height:1.3;margin-top:2px;}
+  .day-type .mp-hi{color:var(--gold);}
+  .day-type .tempo-hi{color:var(--tempo);}
+  .day-type .hard-hi{color:var(--hard);}
+  .day-dist{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white);line-height:1;margin-top:auto;}
+
+  /* WEEK NOTE */
+  .week-note{background:#201C18;border:1px solid var(--line);border-left:3px solid var(--gold);padding:12px 16px;margin:12px 0 0;font-size:12px;color:#A89880;line-height:1.7;font-family:'DM Mono',monospace;}
+  .week-note strong{color:var(--gold);}
+
+  /* RACE BANNER */
+  .race-banner{background:#1A1208;border:1px solid var(--gold);margin:32px 24px 24px;padding:20px 24px;}
+  .race-banner h2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;}
+  .race-banner p{font-family:'DM Mono',monospace;font-size:12px;color:#C0A880;line-height:1.8;}
+
+  /* KEY PRINCIPLES */
+  .principles{padding:28px 24px;border-bottom:1px solid var(--line);}
+  .prin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px;}
+  .prin-card{border:1px solid var(--line);padding:16px;}
+  .prin-card h4{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--gold);letter-spacing:1px;margin-bottom:6px;}
+  .prin-card p{font-size:12px;color:#A89880;line-height:1.6;}
+
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-track{background:var(--off);}
+  ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+
+  /* STRAVA BUTTON */
+  .strava-btn {
+    display:inline-flex;align-items:center;gap:4px;margin-top:auto;
+    font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;
+    color:#FC4C02;border:1px solid #FC4C0255;border-radius:2px;
+    padding:3px 6px;background:#FC4C0210;cursor:pointer;
+    transition:all .15s;text-decoration:none;width:fit-content;
+    white-space:nowrap;
+  }
+  .strava-btn:hover{background:#FC4C0225;border-color:#FC4C02;color:#FC4C02;}
+  .strava-btn.linked{color:#3A7D44;border-color:#3A7D4455;background:#3A7D4415;}
+  .strava-btn.linked:hover{background:#3A7D4430;border-color:#3A7D44;}
+  .strava-btn svg{flex-shrink:0;}
+
+  /* MODAL */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:#00000099;z-index:100;
+    align-items:center;justify-content:center;padding:16px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#1E1814;border:1px solid var(--line);border-top:2px solid #FC4C02;
+    padding:24px;width:100%;max-width:440px;border-radius:2px;
+  }
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#FC4C02;margin-bottom:4px;}
+  .modal-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:16px;}
+  .modal-input{
+    width:100%;background:#111;border:1px solid var(--line);color:var(--white);
+    font-family:'DM Mono',monospace;font-size:12px;padding:10px 12px;
+    border-radius:2px;outline:none;transition:border .15s;
+  }
+  .modal-input:focus{border-color:#FC4C02;}
+  .modal-actions{display:flex;gap:8px;margin-top:12px;}
+  .modal-btn{
+    font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;
+    padding:8px 16px;border-radius:2px;cursor:pointer;border:1px solid;
+    transition:all .15s;
+  }
+  .modal-btn.primary{background:#FC4C02;border-color:#FC4C02;color:#fff;}
+  .modal-btn.primary:hover{background:#e04500;}
+  .modal-btn.secondary{background:transparent;border-color:var(--line);color:var(--muted);}
+  .modal-btn.secondary:hover{border-color:var(--muted);color:var(--white);}
+  .modal-btn.danger{background:transparent;border-color:#C0392B55;color:#C0392B;margin-left:auto;}
+  .modal-btn.danger:hover{background:#C0392B20;border-color:#C0392B;}
+  .modal-preview{
+    margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;
+    color:#FC4C02;word-break:break-all;display:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Patrick · SM MOA · National Finals · Rescheduled</div>
+  <h1>MARATHON<br><span>SHARPENING</span><br>BLOCK</h1>
+  <div class="hero-meta">
+    <div class="meta-pill">Race: <strong>42.2KM</strong></div>
+    <div class="meta-pill">Goal: <strong>SUB 4:10:00</strong></div>
+    <div class="meta-pill">Pace: <strong>5:55/km</strong></div>
+    <div class="meta-pill">Race Day: <strong>SUN NOV 22, 2026</strong></div>
+    <div class="meta-pill">Duration: <strong>9 WEEKS</strong></div>
+    <div class="meta-pill">Peak: <strong>~78 KM/WK</strong></div>
+  </div>
+</div>
+
+<div class="pace-guide">
+  <div class="section-title">Training Pace Guide</div>
+  <table class="pace-table">
+    <thead><tr><th>Zone</th><th>Type</th><th>Pace Range</th><th>Feel</th></tr></thead>
+    <tbody>
+      <tr><td><span class="cdot" style="background:var(--easy)"></span>Easy</td><td>Recovery / Base</td><td>6:40 – 7:25 /km</td><td>Conversational, effortless</td></tr>
+      <tr><td><span class="cdot" style="background:var(--blue)"></span>Long</td><td>Long Run</td><td>6:25 – 7:00 /km</td><td>Comfortable, sustainable</td></tr>
+      <tr><td><span class="cdot" style="background:var(--gold)"></span>MP</td><td>Marathon Pace</td><td>5:52 – 5:58 /km</td><td>Goal race effort, controlled</td></tr>
+      <tr><td><span class="cdot" style="background:var(--tempo)"></span>Tempo</td><td>Threshold</td><td>5:25 – 5:40 /km</td><td>Comfortably hard</td></tr>
+      <tr><td><span class="cdot" style="background:var(--hard)"></span>Intervals</td><td>VO2 / Speed</td><td>5:00 – 5:15 /km</td><td>Hard, controlled</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="ldot" style="background:var(--easy)"></div>Easy Run</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--blue)"></div>Long Run</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--gold)"></div>Marathon Pace</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--tempo)"></div>Tempo</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--hard)"></div>Intervals</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--purple)"></div>S&C</div>
+  <div class="legend-item"><div class="ldot" style="background:#3A2E28"></div>Rest</div>
+  <div class="legend-item"><div class="ldot" style="background:var(--orange)"></div>Race Day</div>
+</div>
+
+<div class="strategy">
+  <div class="section-title">Block Strategy</div>
+  <div class="strat-grid"><div class="strat-card"><div class="num">01</div><h3>Knee First</h3><p>Flare-ups come ~2 days after long runs. Any flare = repeat that week, don't push through. Book the PT.</p></div><div class="strat-card"><div class="num">02</div><h3>Extra Time, Used Wisely</h3><p>Race moved to Nov 22. The 2 bonus weeks buy a mid-block cutback and a safer peak, not extra mileage.</p></div><div class="strat-card"><div class="num">03</div><h3>Two Build Weeks</h3><p>Oct 12–25: one quality session + one MP long run each week. Everything else genuinely easy.</p></div><div class="strat-card"><div class="num">04</div><h3>Peak Oct 26–Nov 1</h3><p>Biggest week and the 32km long run (20km at MP) on Sun Nov 1, 3 weeks out.</p></div><div class="strat-card"><div class="num">05</div><h3>Backup Date Nov 8</h3><p>If the knee flares, the big long run moves to Sun Nov 8 and the taper tightens.</p></div><div class="strat-card"><div class="num">06</div><h3>Trust the Taper</h3><p>Nov 2–22 volume drops hard. Flat and restless legs mean it's working.</p></div></div>
+</div>
+<div class="phase-header"><div class="phase-name">PHASE 1</div><div class="phase-tag">Re-Entry & First Quality</div><div class="phase-weeks">WK 1–2 · Sep 21 – Oct 4</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">01</div><div class="week-info"><div class="week-focus">RETURN TO RUNNING</div><div class="week-dates">Sep 21 – Sep 27</div></div><div class="week-km"><div class="km-val">50</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Sep 21</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Sep-21" data-label="Mon · Sep 21" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Tue</div><div class="day-date">Sep 22</div><div class="day-type">Easy Run</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Sep-22" data-label="Tue · Sep 22" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Sep 23</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Sep-23" data-label="Wed · Sep 23" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Sep 24</div><div class="day-type">Easy Run</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Sep-24" data-label="Thu · Sep 24" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Sep 25</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Sep-25" data-label="Fri · Sep 25" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sat</div><div class="day-date">Sep 26</div><div class="day-type">Easy Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Sep-26" data-label="Sat · Sep 26" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block long"><div class="day-name">Sun</div><div class="day-date">Sep 27</div><div class="day-type">Easy-Moderate Long Run</div><div class="day-dist">16km</div><button class="strava-btn" id="sb-Sep-27" data-label="Sun · Sep 27" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Key session:</strong> Sunday long run is the signature of this week. A run finished without a knee flare-up is a win.</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">02</div><div class="week-info"><div class="week-focus">BUILD — CONFIDENCE LONG RUN</div><div class="week-dates">Sep 28 – Oct 4</div></div><div class="week-km"><div class="km-val">65</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Sep 28</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Sep-28" data-label="Mon · Sep 28" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block tempo"><div class="day-name">Tue</div><div class="day-date">Sep 29</div><div class="day-type"><span class="hard-hi">On Off Ks: 2km WU + <span class="tempo-hi">4 x (1km @ 5:10, 1km @ 5:54)</span> + 2km CD</span></div><div class="day-dist">12km</div><button class="strava-btn" id="sb-Sep-29" data-label="Tue · Sep 29" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Sep 30</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Sep-30" data-label="Wed · Sep 30" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Oct 1</div><div class="day-type">Easy + Strides</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Oct-1" data-label="Thu · Oct 1" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Oct 2</div><div class="day-type">Easy Run</div><div class="day-dist">7km</div><button class="strava-btn" id="sb-Oct-2" data-label="Fri · Oct 2" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Sat</div><div class="day-date">Oct 3</div><div class="day-type">10km easy + <span class="mp-hi">10km @ 5:55/km</span> + 5km easy</div><div class="day-dist">25km</div><button class="strava-btn" id="sb-Oct-3" data-label="Sat · Oct 3" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Oct 4</div><div class="day-type">Recovery Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-4" data-label="Sun · Oct 4" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Confidence run:</strong> 25km with 10km at marathon pace. Proof that goal pace holds when the legs are loaded.</div></div>
+<div class="phase-header"><div class="phase-name">PHASE 2</div><div class="phase-tag">Re-Settle the Knee</div><div class="phase-weeks">WK 3 · Oct 5 – Oct 11</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">03</div><div class="week-info"><div class="week-focus">CUTBACK — CALM THE KNEE</div><div class="week-dates">Oct 5 – Oct 11</div></div><span class="week-badge badge-cutback">Cutback</span><div class="week-km"><div class="km-val">~43</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Oct 5</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Oct-5" data-label="Mon · Oct 5" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block rest"><div class="day-name">Tue</div><div class="day-date">Oct 6</div><div class="day-type">Rest / knee check</div><div class="day-dist">—</div></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Oct 7</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Oct-7" data-label="Wed · Oct 7" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Oct 8</div><div class="day-type">Easy + Strides</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Oct-8" data-label="Thu · Oct 8" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Oct 9</div><div class="day-type">Easy Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-9" data-label="Fri · Oct 9" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block long"><div class="day-name">Sat</div><div class="day-date">Oct 10</div><div class="day-type">Long Run easy, no pace segments</div><div class="day-dist">18km</div><button class="strava-btn" id="sb-Oct-10" data-label="Sat · Oct 10" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Oct 11</div><div class="day-type">Recovery Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-11" data-label="Sun · Oct 11" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Knee flared Oct 5.</strong> If stairs hurt Saturday morning, drop the long run to 12km easy. Nothing is lost.</div></div>
+<div class="phase-header"><div class="phase-name">PHASE 3</div><div class="phase-tag">Build — Two Loading Weeks</div><div class="phase-weeks">WK 4–5 · Oct 12 – Oct 25</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">04</div><div class="week-info"><div class="week-focus">BUILD 1</div><div class="week-dates">Oct 12 – Oct 18</div></div><div class="week-km"><div class="km-val">68</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Oct 12</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Oct-12" data-label="Mon · Oct 12" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block tempo"><div class="day-name">Tue</div><div class="day-date">Oct 13</div><div class="day-type">On-Off Ks: 2km WU + <span class="tempo-hi">4 x (1km @ 5:25, 1km @ 6:00)</span> + 2km CD</div><div class="day-dist">12km</div><button class="strava-btn" id="sb-Oct-13" data-label="Tue · Oct 13" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Oct 14</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Oct-14" data-label="Wed · Oct 14" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Oct 15</div><div class="day-type">Easy + Strides</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Oct-15" data-label="Thu · Oct 15" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Oct 16</div><div class="day-type">Easy Run</div><div class="day-dist">7km</div><button class="strava-btn" id="sb-Oct-16" data-label="Fri · Oct 16" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Sat</div><div class="day-date">Oct 17</div><div class="day-type">8km easy + <span class="mp-hi">14km @ 5:55/km</span> + 6km easy</div><div class="day-dist">28km</div><button class="strava-btn" id="sb-Oct-17" data-label="Sat · Oct 17" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Oct 18</div><div class="day-type">Recovery Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-18" data-label="Sun · Oct 18" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Key session:</strong> Saturday MP long run. Easy parts at 6:30+, no faster.</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">05</div><div class="week-info"><div class="week-focus">BUILD 2</div><div class="week-dates">Oct 19 – Oct 25</div></div><div class="week-km"><div class="km-val">70</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Oct 19</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Oct-19" data-label="Mon · Oct 19" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block tempo"><div class="day-name">Tue</div><div class="day-date">Oct 20</div><div class="day-type">2km WU + <span class="tempo-hi">8km Tempo @ 5:30–5:40</span> + 2km CD</div><div class="day-dist">12km</div><button class="strava-btn" id="sb-Oct-20" data-label="Tue · Oct 20" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Oct 21</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Oct-21" data-label="Wed · Oct 21" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Oct 22</div><div class="day-type">Easy + Strides</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Oct-22" data-label="Thu · Oct 22" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Oct 23</div><div class="day-type">Easy Run</div><div class="day-dist">7km</div><button class="strava-btn" id="sb-Oct-23" data-label="Fri · Oct 23" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Sat</div><div class="day-date">Oct 24</div><div class="day-type">8km easy + <span class="mp-hi">16km @ 5:55/km</span> + 6km easy</div><div class="day-dist">30km</div><button class="strava-btn" id="sb-Oct-24" data-label="Sat · Oct 24" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Oct 25</div><div class="day-type">Recovery Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-25" data-label="Sun · Oct 25" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>CHECKPOINT Oct 25:</strong> knee clean through this week = go for the Oct 26–Nov 1 peak. Flared = repeat this week and push the big long run to Sun Nov 8 (backup date).</div></div>
+<div class="phase-header"><div class="phase-name">PHASE 4</div><div class="phase-tag">Peak — The Big One</div><div class="phase-weeks">WK 6 · Oct 26 – Nov 1</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">06</div><div class="week-info"><div class="week-focus">PEAK — THE BIG ONE</div><div class="week-dates">Oct 26 – Nov 1</div></div><span class="week-badge badge-peak">Peak</span><div class="week-km"><div class="km-val">78</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Oct 26</div><div class="day-type">Easy Run</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Oct-26" data-label="Mon · Oct 26" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block hard"><div class="day-name">Tue</div><div class="day-date">Oct 27</div><div class="day-type">2km WU + <span class="hard-hi">6 x 1km @ 5:05</span> (90s rest) + 2km CD</div><div class="day-dist">12km</div><button class="strava-btn" id="sb-Oct-27" data-label="Tue · Oct 27" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Oct 28</div><div class="day-type">S&C</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Oct-28" data-label="Wed · Oct 28" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Oct 29</div><div class="day-type">Easy + Strides</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Oct-29" data-label="Thu · Oct 29" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Oct 30</div><div class="day-type">Easy Run</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Oct-30" data-label="Fri · Oct 30" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sat</div><div class="day-date">Oct 31</div><div class="day-type">Easy Shakeout</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Oct-31" data-label="Sat · Oct 31" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Sun</div><div class="day-date">Nov 1</div><div class="day-type">7km easy + <span class="mp-hi">20km @ 5:55/km</span> + 5km easy</div><div class="day-dist">32km</div><button class="strava-btn" id="sb-Nov-1" data-label="Sun · Nov 1" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>The big one — Sun Nov 1, 3 weeks out.</strong> Last long run of the block. Fuel it exactly like race day. If the knee flares, Sun Nov 8 is your backup date.</div></div>
+<div class="phase-header"><div class="phase-name">PHASE 5</div><div class="phase-tag">Taper — Protect What You Built</div><div class="phase-weeks">WK 7–9 · Nov 2 – Nov 22</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">07</div><div class="week-info"><div class="week-focus">TAPER 1 — ABSORB THE PEAK</div><div class="week-dates">Nov 2 – Nov 8</div></div><div class="week-km"><div class="km-val">55</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Nov 2</div><div class="day-type">Recovery Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Nov-2" data-label="Mon · Nov 2" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Tue</div><div class="day-date">Nov 3</div><div class="day-type">2km WU + <span class="mp-hi">6km @ 5:55/km</span> + 2km CD</div><div class="day-dist">10km</div><button class="strava-btn" id="sb-Nov-3" data-label="Tue · Nov 3" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Nov 4</div><div class="day-type">S&C — light</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Nov-4" data-label="Wed · Nov 4" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Nov 5</div><div class="day-type">Easy + Strides</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Nov-5" data-label="Thu · Nov 5" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Nov 6</div><div class="day-type">Easy Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Nov-6" data-label="Fri · Nov 6" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block long"><div class="day-name">Sat</div><div class="day-date">Nov 7</div><div class="day-type">Long Run: 12km easy + <span class="mp-hi">6km @ 5:55</span> + 2km easy</div><div class="day-dist">20km</div><button class="strava-btn" id="sb-Nov-7" data-label="Sat · Nov 7" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Nov 8</div><div class="day-type">Recovery Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Nov-8" data-label="Sun · Nov 8" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Legs will feel heavy early, then flat.</strong> That is the peak settling in. No new hard stimulus from here.</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">08</div><div class="week-info"><div class="week-focus">TAPER 2 — VOLUME DROPS</div><div class="week-dates">Nov 9 – Nov 15</div></div><div class="week-km"><div class="km-val">41</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Nov 9</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Nov-9" data-label="Mon · Nov 9" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Tue</div><div class="day-date">Nov 10</div><div class="day-type">2km WU + <span class="mp-hi">4km @ 5:55/km</span> + 2km CD</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Nov-10" data-label="Tue · Nov 10" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block sc"><div class="day-name">Wed</div><div class="day-date">Nov 11</div><div class="day-type">S&C — light</div><div class="day-dist">—</div><button class="strava-btn" id="sb-Nov-11" data-label="Wed · Nov 11" data-defaultlabel="LOG S&C">LOG S&C</button></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Nov 12</div><div class="day-type">Easy + Strides</div><div class="day-dist">7km</div><button class="strava-btn" id="sb-Nov-12" data-label="Thu · Nov 12" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Fri</div><div class="day-date">Nov 13</div><div class="day-type">Easy Run</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Nov-13" data-label="Fri · Nov 13" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block long"><div class="day-name">Sat</div><div class="day-date">Nov 14</div><div class="day-type">Long Run easy</div><div class="day-dist">12km</div><button class="strava-btn" id="sb-Nov-14" data-label="Sat · Nov 14" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block easy"><div class="day-name">Sun</div><div class="day-date">Nov 15</div><div class="day-type">Recovery Run</div><div class="day-dist">4km</div><button class="strava-btn" id="sb-Nov-15" data-label="Sun · Nov 15" data-defaultlabel="LOG RUN">LOG RUN</button></div></div><div class="week-note"><strong>Restless legs = the plan working.</strong> Do not add junk miles to feel ready.</div></div>
+<div class="week-card"><div class="week-top"><div class="week-num">09</div><div class="week-info"><div class="week-focus">RACE WEEK — STAY SHARP, STAY FRESH</div><div class="week-dates">Nov 16 – Nov 22</div></div><div class="week-km"><div class="km-val">23 + race</div><div class="km-lbl">km total</div></div></div><div class="days-grid"><div class="day-block easy"><div class="day-name">Mon</div><div class="day-date">Nov 16</div><div class="day-type">Easy Run</div><div class="day-dist">6km</div><button class="strava-btn" id="sb-Nov-16" data-label="Mon · Nov 16" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block mp"><div class="day-name">Tue</div><div class="day-date">Nov 17</div><div class="day-type">2km WU + <span class="mp-hi">4 x 1km @ 5:55</span> (90s) + 2km CD</div><div class="day-dist">8km</div><button class="strava-btn" id="sb-Nov-17" data-label="Tue · Nov 17" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block rest"><div class="day-name">Wed</div><div class="day-date">Nov 18</div><div class="day-type">Walk / Mobility only</div><div class="day-dist">—</div></div><div class="day-block easy"><div class="day-name">Thu</div><div class="day-date">Nov 19</div><div class="day-type">Easy + 3×strides</div><div class="day-dist">5km</div><button class="strava-btn" id="sb-Nov-19" data-label="Thu · Nov 19" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block rest"><div class="day-name">Fri</div><div class="day-date">Nov 20</div><div class="day-type">Rest</div><div class="day-dist">—</div></div><div class="day-block easy"><div class="day-name">Sat</div><div class="day-date">Nov 21</div><div class="day-type">Easy Shakeout</div><div class="day-dist">4km</div><button class="strava-btn" id="sb-Nov-21" data-label="Sat · Nov 21" data-defaultlabel="LOG RUN">LOG RUN</button></div><div class="day-block race"><div class="day-name">Sun</div><div class="day-date">Nov 22</div><div class="day-type">🏁 RACE DAY</div><div class="day-dist">42.2km</div><button class="strava-btn" id="sb-Nov-22" data-label="Sun · Nov 22" data-defaultlabel="LOG RACE">LOG RACE</button></div></div><div class="week-note"><strong>Do nothing new.</strong> No new shoes, food, or heroics. Sleep early, hydrate from Thursday.</div></div>
+<div class="race-banner">
+  <h2>RACE DAY STRATEGY — SUN NOV 22</h2>
+  <p>
+    <strong style="color:var(--gold)">Km 0–10:</strong> 6:05–6:10/km. Resist the crowd. Slower than target on purpose.<br>
+    <strong style="color:var(--gold)">Km 10–21:</strong> Lock into 5:55–5:58/km. Controlled cruise. Gel every 6km, salt at 10km.<br>
+    <strong style="color:var(--gold)">Km 21–32:</strong> Maintain 5:55. Caffeine gel at 22km. Race starts here.<br>
+    <strong style="color:var(--gold)">Km 32–42:</strong> Sub-4:10 is yours if you hit 32km by about 3:09. Empty the tank.<br><br>
+    <strong style="color:var(--white)">Nutrition:</strong> Carbs/gel every 6km. Salt at 10km &amp; 20km.<br>
+    <strong style="color:var(--white)">Race Shoe:</strong> 361 Flame 5 &nbsp;·&nbsp; <strong style="color:var(--white)">Sub-4:10 = 5:55/km. Memorize it.</strong>
+  </p>
+</div>
+
+<div class="principles">
+  <div class="section-title">Key Principles</div>
+  <div class="prin-grid"><div class="prin-card"><h4>MP In Long Runs</h4><p>Your legs need to know 5:55/km at km 20+. That contrast wins the second half.</p></div><div class="prin-card"><h4>Easy Means Easy</h4><p>Easy portions at 6:30–6:45+. Run them faster and the MP segments fall apart.</p></div><div class="prin-card"><h4>5:55/km Is Your Anchor</h4><p>By race day it should feel boring. If it feels hard, you went out too fast.</p></div><div class="prin-card"><h4>Knee Rule</h4><p>Flare = repeat the week. Never push through lateral knee pain.</p></div><div class="prin-card"><h4>Peak Then Absorb</h4><p>The 3-week taper is where the Nov 1 long run turns into fitness.</p></div><div class="prin-card"><h4>Taper Is Intentional</h4><p>Flat, restless legs are correct. Don't add junk miles.</p></div></div>
+</div>
+
+<!-- STRAVA MODAL -->
+<div class="modal-overlay" id="stravaModal">
+  <div class="modal">
+    <div class="modal-title">LINK STRAVA ACTIVITY</div>
+    <div class="modal-sub" id="modalSub">—</div>
+    <input class="modal-input" id="stravaInput" type="url" placeholder="https://www.strava.com/activities/…" />
+    <div class="modal-preview" id="modalPreview"></div>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="saveStravaLink()">SAVE LINK</button>
+      <button class="modal-btn secondary" onclick="closeModal()">CANCEL</button>
+      <button class="modal-btn danger" id="clearBtn" onclick="clearStravaLink()" style="display:none">REMOVE</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'strava_links_marathon_v1';
+  let currentDayId = null;
+
+  function getLinks() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveLinks(links) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+  }
+
+  function openModal(dayId, label) {
+    currentDayId = dayId;
+    const links = getLinks();
+    const existing = links[dayId] || '';
+    document.getElementById('modalSub').textContent = label;
+    document.getElementById('stravaInput').value = existing;
+    const preview = document.getElementById('modalPreview');
+    if (existing) { preview.style.display = 'block'; preview.textContent = '→ ' + existing; }
+    else { preview.style.display = 'none'; }
+    document.getElementById('clearBtn').style.display = existing ? 'inline-flex' : 'none';
+    document.getElementById('stravaModal').classList.add('open');
+    setTimeout(() => document.getElementById('stravaInput').focus(), 50);
+  }
+
+  function closeModal() {
+    document.getElementById('stravaModal').classList.remove('open');
+    currentDayId = null;
+  }
+
+  function saveStravaLink() {
+    const url = document.getElementById('stravaInput').value.trim();
+    if (!url) { clearStravaLink(); return; }
+    const links = getLinks();
+    links[currentDayId] = url;
+    saveLinks(links);
+    updateButton(currentDayId, url);
+    closeModal();
+  }
+
+  function clearStravaLink() {
+    const links = getLinks();
+    delete links[currentDayId];
+    saveLinks(links);
+    updateButton(currentDayId, '');
+    closeModal();
+  }
+
+  function updateButton(dayId, url) {
+    const btn = document.getElementById('sb-' + dayId);
+    if (!btn) return;
+    const defaultLabel = btn.dataset.defaultlabel || 'LOG RUN';
+    if (url) {
+      btn.classList.add('linked');
+      btn.title = 'View on Strava';
+      btn.innerHTML = stravaIcon() + 'LOGGED ✓';
+      btn.onclick = (e) => { e.stopPropagation(); window.open(url, '_blank'); };
+      btn.oncontextmenu = (e) => { e.preventDefault(); openModal(dayId, btn.dataset.label); };
+    } else {
+      btn.classList.remove('linked');
+      btn.title = 'Link Strava activity';
+      btn.innerHTML = stravaIcon() + defaultLabel;
+      btn.onclick = (e) => { e.stopPropagation(); openModal(dayId, btn.dataset.label); };
+      btn.oncontextmenu = null;
+    }
+  }
+
+  function stravaIcon() {
+    return `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>`;
+  }
+
+  document.getElementById('stravaModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.getElementById('stravaInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveStravaLink(); });
+  document.getElementById('stravaInput').addEventListener('input', function() {
+    const preview = document.getElementById('modalPreview');
+    if (this.value.trim()) { preview.style.display = 'block'; preview.textContent = '→ ' + this.value.trim(); }
+    else { preview.style.display = 'none'; }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const links = getLinks();
+    document.querySelectorAll('.strava-btn').forEach(btn => {
+      const id = btn.id.replace('sb-', '');
+      updateButton(id, links[id] || '');
+    });
+  });
+</script>
+</body>
+</html>
